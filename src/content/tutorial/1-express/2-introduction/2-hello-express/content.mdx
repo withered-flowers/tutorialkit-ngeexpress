@@ -1,0 +1,49 @@
+---
+type: lesson
+title: Welcome to Express
+focus: /app.js
+prepareCommands:
+  - ['npm install', 'Installing dependencies']
+terminal: 
+  open: true
+  panels: 
+    - type: terminal
+---
+
+# Hello Express
+
+Express merupakan sebuah `framework` pada nodejs yang sangat populer dan  digunakan untuk membuat aplikasi web (mirip dengan `sinatra` pada `ruby`)
+
+Cara membuat sebuah aplikasi web sederhana dengan express adalah sebagai berikut:
+
+1. Buat sebuah file utama (mis: `app.js`)
+1. Buat kode untuk menjalankan express seperti kode di bawah ini
+1. Jalankan dengan mengetik `node app.js`
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Default port aplikasi express
+// Port untuk development jangan di bawah 1024, 
+// reserved for system usage (well-known ports)
+const PORT = 3000;
+
+// app.listen(port, callback)
+// digunakan untuk meng-serve aplikasi web yang dibuat pada port tertentu
+app.listen(3000, () => {
+  console.log(`Welcome to express at port ${PORT}`);
+});
+```
+
+Ketika kita menjalankan kode di atas, pada terminal akan mengeluarkan output
+```
+Welcome to express at port 3000
+```
+
+Namun ketika kita melihat pada preview, akan muncul output error
+```
+Cannot get /
+```
+
+Mengapa demikian? Hal ini terjadi karena __kita belum mengerti__ cara pakai express!

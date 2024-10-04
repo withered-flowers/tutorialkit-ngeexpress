@@ -1,0 +1,52 @@
+---
+type: lesson
+title: Expressing Express
+---
+
+# Belajar Pakai Express
+
+Dalam menggunakan express, kita harus mendefinisikan rute (atau disebut dengan
+`endpoint`) yang akan digunakan oleh aplikasi web kita. cara mendefinisikan rute 
+pada app ini berhubungan dengan HTTP methods yang akan digunakan, seperti 
+`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, dsb. untuk full method yang dapat 
+digunakan pada express dapat dilihat di tautan 
+[ini](https://expressjs.com/en/4x/api.html#app.METHOD)
+
+Namun yang akan digunakan pada pembelajaran ini adalah HTTP method `GET` saja.
+
+Cara menggunakannya dengan memodifikasi Code 1 dan dapat dilihat pada [Code 2](#code-2)
+
+### Code 2
+```javascript
+const express = require('express');
+const app = express();
+
+const PORT = 3000;
+
+// Di sini kita mendefinisikan penggunaan endpoint '/'
+// yang akan meng-handle HTTP GET method
+app.get('/', function HTTPGetRootHandler(req, res) {
+  res.send("Hello world");
+});
+
+
+app.listen(3000, () => {
+  console.log(`Welcome to express at port ${PORT}`);
+});
+```
+
+Kemudian kita akan menjalankan kode di atas dengan me-`refresh` halaman browser
+yang digunakan. 
+
+Tapi mengapa kode kita tidak berjalan dan masih mengeluarkan output 
+`Cannot GET /` ?
+
+Hal ini terjadi karena kita belum mematikan aplikasi web yang dibuat, sehingga
+masih menggunakan kode yang lama. Untuk menggunakan kode yang baru ini, kita 
+harus mematikan aplikasi kita terlebih dahulu (`CTRL + C`) pada terminal, lalu
+menjalankan kode nya ulang (`node app.js`) lagi. 
+
+Cukup menyebalkan bukan ?
+
+Sehingga kita akan memasang module tambahan supaya aplikasi bisa `auto restart` 
+pada saat pengembangan aplikasi web ini.

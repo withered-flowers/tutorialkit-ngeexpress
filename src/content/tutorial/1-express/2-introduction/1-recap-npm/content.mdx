@@ -1,0 +1,35 @@
+---
+type: lesson
+title: Recap - npm
+prepareCommands:
+  - ['npm install', 'Installing dependencies']
+terminal:
+  open: true
+  panels: 
+    - type: terminal
+focus: /package.json
+---
+
+# Recap Penggunaan npm
+
+`npm` adalah  **node package manager**, tools pada nodejs untuk memasang *package* atau *extension* atau *modules* tambahan pada nodejs.
+
+Cara menggunakan npm:
+* Buka terminal / cmd / ps
+* Masuk ke dalam folder project yang akan menggunakan nodejs
+* Ketik `npm init` (atau `npm init -y` bila ingin instan)
+* Masukkan data yang berhubungan dengan `author`
+* Lihat pada folder, akan terbentuk file baru dengan nama `package.json`
+* Mulai melakukan instalasi package tambahan dengan mengetik   
+  `npm install <nama_package>` (bisa menerima satu atau lebih package)   
+  e.g.: `npm install express`
+* Apabila akan memasang package yang hanya digunakan untuk development saja gunakan `npm install --save-dev <nama_package>`  
+  e.g.: `npm install --save-dev nodemon`
+* Lihat pada folder, akan terbentuk folder `node_modules` dan file 
+  `package_lock.json`
+  * `node_modules` adalah tempat di mana package tambahan ditaruh
+  * `package_lock.json` adalah file untuk menjaga konsistensi versi file yang digunakan
+  * `bun.lockb` adalah versi lain dari package_lock.json (apabila menggunakan `bun`)
+
+> Pada pembelajaran ini, module / package tambahan yang digunakan adalah `nodemon` dan
+`express`

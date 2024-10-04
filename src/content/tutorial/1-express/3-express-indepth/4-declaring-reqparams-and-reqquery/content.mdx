@@ -1,0 +1,119 @@
+---
+type: lesson
+title: Declaring req.params and req.query
+---
+
+## How to use req.params and req.query
+Cara untuk menghandle "input" pada browser sebagaimana yang dimaksud sebelumnya 
+adalah dengan menggunakan `req.params` dan `req.query`
+
+Perbedaannya adalah dari cara kita menuliskan inputnya pada url di browser.
+
+Contoh URL dan penggunaan yang tepat:  
+(`[]` menandakan inputan yang ingin diterima)
+* `localhost/users/[1]` => menggunakan req.params
+* `localhost/users?[search=1]` => menggunakan req.query
+
+Pada kode cara menggunakan `req.params` dan `req.query` pun berbeda:
+* `req.params` harus mendefinisikan parameter pada `endpoint` (e.g. `/abc/:param1`)
+* `req.query` tidak perlu mendefinisikan parameter pada `endpoint` namun kita perlu 
+  mendefinisikannya via url di browser (e.g. `localhost/abc?param1=value1`)
+
+Untuk memperdalam lebih lanjut, kita akan memodifikasi Code 3 menjadi 
+[Code 4](#code-4) di bawah ini.
+
+### Code 4
+```javascript
+const fs = require('fs');
+
+const express = require('express');
+const app = express();
+
+const PORT = 3000;
+
+app.get('/', function HTTPGetRootHandler(req, res) {
+  res.send("Hello world");
+});
+
+// Di endpoint ini kita akan menggunakan req.query
+app.get('/users', function HTTPGetUsersHandler(req, res) {
+  fs.readFile('./0-generated.json', 'utf8', function readHandler(err, data) {
+    if(err) {
+      res.send(err);
+    }
+
+    data = JSON.parse(data);
+    
+    // Ingat data dari req.query selalu berbentuk string
+    if(req.query.reversed === 'true') {
+      data.sort((a,b) => b.id - a.id);
+    }
+
+    res.send(data);
+  });
+});
+
+
+// Di endpoint ini kita akan menggunakan req.params
+app.get('/users/:id', function HTTPGetUsersInputHandler(req, res) {
+  // res.send(req.params.id);
+
+  fs.readFile('./0-generated.json', 'utf8', function readHandler(err, data) {
+    if(err) {
+      res.send(err);
+    }
+
+    data = JSON.parse(data);
+    data = data.find(element => element.id === parseInt(req.params.id));
+
+    res.send(data);
+  });
+});
+
+// Di endpoint ini kita akan mengkombinasikan req.params dan req.query
+app.get('/users/:id/companies', function HTTPGetUserCompaniesHandler(req, res) {
+  fs.readFile('./0-generated.json', 'utf8', function readHandler(err, data) {
+    let result = null;
+
+    if(err) {
+      res.send(err);
+    }
+
+    result = JSON.parse(data);
+    result = result.find(element => element.id === parseInt(req.params.id));
+
+    if(req.query.positions != null) {
+      result = result.companies[req.query.positions];
+    }
+    else {
+      result = result.companies;
+    }
+
+    res.send(result);
+  });
+});
+
+app.listen(3000, () => {
+  console.log(`Welcome to express at port ${PORT}`);
+});
+```
+
+*Lah*, apa gunanya kalau begitu `req.query` ataupun `req.params` ?  
+kalau begini saya pakai `req.query` atau `req.params` saja semuanya, *toh* sama 
+saja !
+
+Letak perbedaan dari `req.query` dan `req.params` selain dari cara menggunakan, 
+adalah dari **kegunaan**-nya.
+
+BEST PRACTICE:
+* `req.params` umumnya digunakan mengambil / memberikan info dari sumber yang 
+  diinginkan. misalnya dalam hal di atas, adalah mengenai informasi `user`
+* `req.query` umumnya digunakan untuk melakukan `sorting` / `filter` dari data 
+  yang ada sesuai dengan keinginan user
+* Apabila dalam endpoint / query memiliki 2 kata e.g. `belum bosen`, maka dalam 
+  penulisan endpointnya dipisah dengan *hyphen* / *dash* `-` menjadi 
+  `belum-bosen`.
+
+WARNING:
+* Dalam menuliskan rute pada express, posisi menentukan prestasi, jadi jangan 
+  sampai menuliskan rute yang bertentangan pada urutan yang salah yah !
