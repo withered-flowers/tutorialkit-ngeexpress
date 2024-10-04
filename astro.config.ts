@@ -6,5 +6,5 @@ export default defineConfig({
 		enabled: false,
 	},
 	integrations: [tutorialkit()],
-	site: "http://localhost:4321",
+	site: process.env.SITE_URL || "http://localhost:4321",
 });
