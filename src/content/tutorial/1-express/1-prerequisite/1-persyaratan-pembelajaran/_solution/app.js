@@ -1,1 +1,1 @@
-// Nanti kita akan menuliskan kode di sini
+// Nanti kita akan menuliskan code di sini

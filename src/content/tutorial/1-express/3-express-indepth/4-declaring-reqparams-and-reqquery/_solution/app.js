@@ -1,43 +1,3 @@
----
-type: lesson
-title: Declaring req.params and req.query
-template: express-part-3
-prepareCommands:
-  - ['npm install', 'Installing dependencies']
-mainCommand: ['nodemon app.js', 'Running Express with Nodemon']
-focus: /app.js
-previews:
-  - title: GET /users?reversed=true
-    pathname: /users?reversed=true
-    port: 3000
-  - title: GET /users/1
-    pathname: /users/1
-    port: 3000
-  - title: GET /users/20/companies?position=1
-    pathname: /users/20/companies?position=1
-    port: 3000
----
-
-## Params dan Query
-Cara untuk menghandle "input" pada browser sebagaimana yang dimaksud sebelumnya 
-adalah dengan menggunakan params (`req.params`) dan query (`req.query`)
-
-Perbedaannya adalah dari cara kita menuliskan inputnya pada url di browser.
-
-Contoh URL dan penggunaan yang tepat:  
-(`[]` menandakan inputan yang ingin diterima)
-* `localhost/users/[1]` => menggunakan req.params
-* `localhost/users?[search=1]` => menggunakan req.query
-
-Pada code cara menggunakan `req.params` dan `req.query` pun berbeda:
-* `req.params` harus mendefinisikan parameter pada `endpoint` (e.g. `/abc/:param1`)
-* `req.query` tidak perlu mendefinisikan parameter pada `endpoint` namun kita perlu 
-  mendefinisikannya via url di browser (e.g. `localhost/abc?param1=value1`)
-
-Untuk memperdalam lebih lanjut, kita akan memodifikasi code di samping menjadi 
-code di bawah ini.
-
-```javascript
 const fs = require("node:fs/promises");
 
 const express = require("express");
@@ -135,23 +95,3 @@ app.get(
 app.listen(3000, () => {
 	console.log(`Welcome to express at port ${PORT}`);
 });
-```
-
-*Lah*, apa gunanya kalau begitu `req.query` ataupun `req.params` ? kalau begini saya pakai `req.query` atau `req.params` saja semuanya, *toh* sama saja !
-
-Letak perbedaan dari `req.query` dan `req.params` selain dari cara menggunakan, adalah dari **kegunaan**-nya.
-
-:::tip
-* `req.params` umumnya digunakan mengambil / memberikan info dari sumber yang 
-  diinginkan. misalnya dalam hal di atas, adalah mengenai informasi `user`
-* `req.query` umumnya digunakan untuk melakukan `sorting` / `filter` dari data 
-  yang ada sesuai dengan keinginan user
-* Apabila dalam endpoint / query memiliki 2 kata e.g. `belum bosen`, maka dalam 
-  penulisan endpointnya dipisah dengan *hyphen* / *dash* `-` menjadi 
-  `belum-bosen`.
-:::
-
-:::warn
-* Dalam menuliskan rute pada express, posisi menentukan prestasi, jadi jangan 
-  sampai menuliskan rute yang bertentangan pada urutan yang salah yah !
-:::

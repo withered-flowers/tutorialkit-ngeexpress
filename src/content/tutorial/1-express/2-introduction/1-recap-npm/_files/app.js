@@ -1,2 +1,2 @@
-// Ini masih kosongan, kita akan menuliskan kode di sini nantinya
+// Ini masih kosongan, kita akan menuliskan code di sini nantinya
 console.log("Kosong adalah isi");

@@ -1,27 +1,3 @@
----
-type: lesson
-title: Declaring Route
-template: express-part-2
-prepareCommands:
-  - ['npm install', 'Installing dependencies']
-mainCommand: ['nodemon app.js', 'Running Express with Nodemon']
-focus: /app.js
-previews: 
-  - title: GET /
-    pathname: /
-    port: 3000
-  - title: GET /users
-    pathname: /users
-    port: 3000
-  - title: GET /users/id
-    pathname: /users/id
-    port: 3000
----
-
-# Basic Routing
-Pada express, kita bebas menentukan `endpoint` yang kita inginkan dengan nama tertentu pada aplikasi web yang akan kita gunakan, mari kita memodifikasi code di samping menjadi code di bawah ini
-
-```javascript
 const fs = require("node:fs/promises");
 
 const express = require("express");
@@ -67,19 +43,3 @@ app.get("/users/id", function HTTPGetUsersInputHandler(req, res) {
 app.listen(3000, () => {
 	console.log(`Welcome to express at port ${PORT}`);
 });
-```
-
-Pada code di atas, selain kita dapat mendefinisikan `endpoint` lebih dari satu yang sesuai dengan keinginan kita, kita juga dapat mendefinisikan `nested endpoint` seperti `localhost:3000/users/id` di atas.
-
-Namun code di atas, masih kurang benar, karena input `id` yang kita inginkan  tidak dapat dicetak pada browser. 
-
-Output pada `localhost:3000/users/id` di  browser adalah:
-```
-ReferenceError: id is not defined
-```
-
-Mengapa demikian?
-
-:::warn
-Karena kita belum menggunakan / membaca inputan (si `id`) tersebut di dalam express ini !
-:::
