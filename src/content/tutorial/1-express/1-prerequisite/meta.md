@@ -1,5 +1,5 @@
 ---
 type: chapter
 title: Prerequisite
-template: initial-example
+template: express-initial
 ---

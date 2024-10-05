@@ -1,37 +1,45 @@
 ---
 type: lesson
 title: Expressing Express
+template: express-part-1
+focus: /app.js
+prepareCommands:
+  - ['npm install', 'Installing dependencies']
+terminal:
+  open: true
+  panels:
+    - type: terminal
 ---
 
 # Belajar Pakai Express
 
-Dalam menggunakan express, kita harus mendefinisikan rute (atau disebut dengan
-`endpoint`) yang akan digunakan oleh aplikasi web kita. cara mendefinisikan rute 
-pada app ini berhubungan dengan HTTP methods yang akan digunakan, seperti 
-`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, dsb. untuk full method yang dapat 
-digunakan pada express dapat dilihat di tautan 
-[ini](https://expressjs.com/en/4x/api.html#app.METHOD)
+Dalam menggunakan express, kita harus mendefinisikan rute (atau disebut dengan `endpoint`) yang akan digunakan oleh aplikasi web kita. 
+
+Cara mendefinisikan rute pada app ini berhubungan dengan HTTP methods yang akan digunakan, seperti  `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, dsb. untuk full method yang dapat  digunakan pada express dapat dilihat di tautan [ini](https://expressjs.com/en/4x/api.html#app.METHOD)
 
 Namun yang akan digunakan pada pembelajaran ini adalah HTTP method `GET` saja.
 
-Cara menggunakannya dengan memodifikasi Code 1 dan dapat dilihat pada [Code 2](#code-2)
+Cara menggunakannya dengan memodifikasi code yang ada di samping menjadi seperti di bawah ini
 
-### Code 2
 ```javascript
-const express = require('express');
+const express = require("express");
 const app = express();
 
+// Default port aplikasi express
+// Port untuk development jangan di bawah 1024,
+// reserved for system usage (well-known ports)
 const PORT = 3000;
 
 // Di sini kita mendefinisikan penggunaan endpoint '/'
 // yang akan meng-handle HTTP GET method
-app.get('/', function HTTPGetRootHandler(req, res) {
-  res.send("Hello world");
+app.get("/", function HTTPGetRootHandler(req, res) {
+	res.send("Hello world");
 });
 
-
+// app.listen(port, callback)
+// digunakan untuk meng-serve aplikasi web yang dibuat pada port tertentu
 app.listen(3000, () => {
-  console.log(`Welcome to express at port ${PORT}`);
+	console.log(`Welcome to express at port ${PORT}`);
 });
 ```
 
@@ -50,3 +58,9 @@ Cukup menyebalkan bukan ?
 
 Sehingga kita akan memasang module tambahan supaya aplikasi bisa `auto restart` 
 pada saat pengembangan aplikasi web ini.
+
+:::info
+`auto-restart` atau umumnya disebut dengan `hot-reload` adalah fitur yang berfungsi untuk mematikan aplikasi web yang sedang berjalan, lalu menjalankan ulang aplikasi web tersebut ketika ada perubahan pada file yang diawasi.
+
+Bertujuan untuk meningkatkan produktivitas developer dalam mengembangkan aplikasi web.
+:::

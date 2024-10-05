@@ -1,6 +1,14 @@
 ---
 type: lesson
 title: Using Nodemon
+template: express-part-2
+focus: /app.js
+prepareCommands:
+  - ['npm install', 'Installing dependencies']
+terminal:
+  open: true
+  panels:
+    - type: terminal
 ---
 
 # How to use nodemon
@@ -18,3 +26,7 @@ Cara memasang module `nodemon` dan menggunakan `npx`:
 
 Setelah menjalankan ini maka setiap perubahan pada file `app.js`, aplikasi web 
 akan langsung `auto restart`, sungguh memudahkan development bukan ?
+
+:::info
+Pada langkah selanjutnya **terminal** tidak akan dimunculkan lagi dan sudah dipasangkan nodemon, sehingga akan memudahka kita untuk fokus pada code editor
+:::
