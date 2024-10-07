@@ -5,6 +5,12 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
-	integrations: [tutorialkit()],
+	integrations: [
+		tutorialkit({
+			components: {
+				TopBar: "./src/components/CustomTopBar.astro",
+			},
+		}),
+	],
 	site: process.env.SITE_URL || "http://localhost:4321",
 });
