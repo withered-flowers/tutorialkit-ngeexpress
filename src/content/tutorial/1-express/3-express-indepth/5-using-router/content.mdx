@@ -1,0 +1,217 @@
+---
+type: lesson
+title: Menggunakan express.Router
+template: express-part-4
+prepareCommands:
+  - ['npm install', 'Installing dependencies']
+mainCommand: ['nodemon app.js', 'Running Express with Nodemon']
+focus: /routes/users.js
+previews:
+  - title: GET /users?reversed=true
+    pathname: /users?reversed=true
+    port: 3000
+  - title: GET /users/1
+    pathname: /users/1
+    port: 3000
+  - title: GET /users/20/companies?position=1
+    pathname: /users/20/companies?position=1
+    port: 3000
+---
+
+# Using express.Router
+
+:::info
+Output dari aplikasi yang dibuat pada bagian ini, sama dengan hasil akhir pada bagian sebelumnya.
+
+Hanya saja **cara penulisan code-nya menjadi berbeda**.
+:::
+
+Pada bagian ini, kita akan memisahkan routing yang ada pada aplikasi `Express` kita menjadi beberapa file terpisah dengan menggunakan fitur yang dimiliki `Express` bernama `Router`.
+
+Diambil dari dokumentasi [express.Router](https://expressjs.com/en/guide/routing.html), ini adalah sebuah class yang dapat digunakan untuk membuat modular route handler, yang disebut sebagai `mini-app`.
+
+Untuk penggunaannya pun, sebenarnya cukup dengan menuliskan code sebagai berikut:
+
+```js
+// File: routes/xxx.js
+const express = require('express');
+const router = express.Router();
+
+// Deklarasikan code route yang diinginkan disini
+router.get('/', (req, res) => {
+  ...
+});
+
+router.post('/', (req, res) => {
+  ...
+});
+
+module.exports = router;
+```
+
+Kemudian, kita bisa menggunakan `router` yang telah kita buat pada file `app.js` dengan cara sebagai berikut:
+
+```js
+// File: app.js
+const express = require('express');
+const app = express();
+
+// Import router yang telah dibuat
+const xxxRouter = require('./routes/xxx');
+
+// Gunakan router yang telah dibuat
+app.use(
+  // Set prefix route yang diinginkan
+  '/xxx', 
+  // Gunakan router yang telah dibuat
+  xxxRouter
+);
+
+...
+```
+
+:::tip 
+Untuk folder pengelompokkan route yang dibuat, sebenarnya tidak ada konvensinya, bisa `/routes`, `/routers`, `/endpoints`, atau lainnya.
+
+Pada contoh ini, kita akan mengelompokkan route yang dibuat pada folder `routes`.
+:::
+
+Nah supaya lebih mengerti lagi, mari kita coba implementasikan pada aplikasi yang ada di samping dengan langkah-langkah berikut:
+
+1. Buka file `app.js` dan copy paste line 12 .. 93 ke dalam file `routes/users`, kemudian modifikasi code tersebut menjadi seperti berikut:
+
+    ```js
+    // File: routes/users.js
+
+    /* 
+    Kita akan menuliskan routing yang ada di app.js, ke dalam file ini.
+
+    Perhatikan bahwa kita memiliki 3 route yang sudah dideklarasikan:
+    - GET /users
+    - GET /users/:id
+    - GET /users/:id/companies
+
+    Analisis:
+    - Semuanya memiliki prefix (awalan) `/users`
+
+    Sehingga pada file ini, kita hanya perlu menuliskan route TANPA PREFIX `/users`
+
+    Jadi yang akan dideklarasikan di sini adalah:
+    - GET /
+    - GET /:id
+    - GET /:id/companies
+    */
+
+    // Import express.Router
+    const express = require("express");
+    const router = express.Router();
+
+    // Karena di sini akan membaca file, maka kita perlu menggunakan fs/promises
+    const fs = require("node:fs/promises");
+
+    // Ganti app.get menjadi router.get
+    // Buang awalan (prefix) /users, apabila hilang semua, hanya menjadi /
+    // /users -> /
+    router.get("/", async function HTTPGetUsersHandler(req, res) {
+      try {
+        const data = await fs.readFile("./data/dummy.json", "utf-8");
+
+        const dataInJson = JSON.parse(data);
+
+        if (req.query.reversed === "true") {
+          dataInJson.sort((a, b) => b.id - a.id);
+        }
+
+        res.send(`<pre>${JSON.stringify(dataInJson, null, 2)}</pre>`);
+      } catch (err) {
+        console.error(err);
+
+        res.status(500).send("Internal Server Error");
+      }
+    });
+
+    // Ganti app.get menjadi router.get
+    // Buang awalan (prefix) /users
+    // /users/:id -> /:id
+    router.get("/:id", async function HTTPGetUsersInputHandler(req, res) {
+      const paramId = Number(req.params.id);
+
+      const data = await fs.readFile("./data/dummy.json", "utf-8");
+      const dataInJson = JSON.parse(data);
+
+      const dataById = dataInJson.find((element) => Number(element.id) === paramId);
+
+      if (dataById) {
+        res.send(`<pre>${JSON.stringify(dataById, null, 2)}</pre>`);
+      } else {
+        res.status(404).send("Data tidak ditemukan");
+      }
+    });
+
+    // Ganti app.get menjadi router.get
+    // Buang awalan (prefix) /users
+    // /users/:id/companies -> /:id/companies
+    router.get(
+      "/:id/companies",
+      async function HTTPGetUserCompaniesHandler(req, res) {
+        const paramId = Number(req.params.id);
+        const queryPosition = req.query.position;
+
+        const data = await fs.readFile("./data/dummy.json", "utf-8");
+        const dataInJson = JSON.parse(data);
+
+        let dataById = dataInJson.find((element) => Number(element.id) === paramId);
+
+        if (queryPosition != null) {
+          dataById = dataById.companies[queryPosition];
+        } else {
+          dataById = dataById.companies;
+        }
+
+        res.send(`<pre>${JSON.stringify(dataById, null, 2)}</pre>`);
+      },
+    );
+
+    // Karena ini akan digunakan pada tempat yang lain, kita perlu export router
+    module.exports = router;
+
+    ```
+
+1. Modifikasi file `app.js` untuk bisa menggunakan file `routes/users.js` yang telah kita buat sebelumnya. 
+
+    ```js
+    // File: app.js
+
+    const express = require("express");
+
+    // Import router yang sudah dibuat
+    const usersRouter = require("./routes/users");
+
+    const app = express();
+
+    const PORT = 3000;
+
+    app.get("/", function HTTPGetRootHandler(req, res) {
+      res.send("Hello world");
+    });
+
+    // Gunakan router yang sudah dibuat
+    // Jangan lupa tambahkan prefix /users
+    app.use("/users", usersRouter);
+
+    app.listen(3000, () => {
+      console.log(`Welcome to express at port ${PORT}`);
+    });
+    ```
+
+Dan **SELESAI** 🎉🎉🎉 !
+
+Sampai pada bagian ini, kita telah memisahkan routing yang ada pada aplikasi `Express` kita menjadi beberapa file terpisah dengan menggunakan `express.Router`.
+
+:::info
+Perhatikan code pada file utama (`app.js`) akan menjadi lebih singkat dan rapih !
+
+Hal ini akan membantu kita dalam mengelola code yang ada, terutama ketika aplikasi kita sudah semakin kompleks.
+:::
+
+Selamat belajar express dan jangan lupa latihan yah 😉 !
