@@ -13,8 +13,8 @@ previews:
   - title: GET /users
     pathname: /users
     port: 3000
-  - title: GET /users/id
-    pathname: /users/id
+  - title: GET /users/userId
+    pathname: /users/userId
     port: 3000
 ---
 
@@ -60,8 +60,8 @@ app.get("/users", async function HTTPGetUsersHandler(req, res) {
 
 // Disini ceritanya kita menginginkan inputan id dari browser untuk kita
 // proses / tampilkan kembali
-app.get("/users/id", function HTTPGetUsersInputHandler(req, res) {
-	res.send(id);
+app.get("/users/userId", function HTTPGetUsersInputHandler(req, res) {
+	res.send(userId);
 });
 
 app.listen(3000, () => {
@@ -69,13 +69,13 @@ app.listen(3000, () => {
 });
 ```
 
-Pada code di atas, selain kita dapat mendefinisikan `endpoint` lebih dari satu yang sesuai dengan keinginan kita, kita juga dapat mendefinisikan `nested endpoint` seperti `localhost:3000/users/id` di atas.
+Pada code di atas, selain kita dapat mendefinisikan `endpoint` lebih dari satu yang sesuai dengan keinginan kita, kita juga dapat mendefinisikan `nested endpoint` seperti `localhost:3000/users/userId` di atas.
 
 Namun code di atas, masih kurang benar, karena input `id` yang kita inginkan  tidak dapat dicetak pada browser. 
 
-Output pada `localhost:3000/users/id` di  browser adalah:
+Output pada `localhost:3000/users/userId` di  browser adalah:
 ```
-ReferenceError: id is not defined
+ReferenceError: userId is not defined
 ```
 
 Mengapa demikian?

@@ -36,8 +36,8 @@ app.get("/users", async function HTTPGetUsersHandler(req, res) {
 
 // Disini ceritanya kita menginginkan inputan id dari browser untuk kita
 // proses / tampilkan kembali
-app.get("/users/id", function HTTPGetUsersInputHandler(req, res) {
-	res.send(id);
+app.get("/users/userId", function HTTPGetUsersInputHandler(req, res) {
+	res.send(userId);
 });
 
 app.listen(3000, () => {
